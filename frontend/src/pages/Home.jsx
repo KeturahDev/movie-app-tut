@@ -26,9 +26,23 @@ const Home = () => {
   searchMovies;
   getPopularMovies;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert(searchQuery);
+    if (!searchQuery.trim()) return;
+
+    if (loading) return;
+    setLoading(true);
+
+    try {
+      const searchResults = await searchMovies(searchQuery);
+      setMovies(searchResults);
+      setError(null);
+    } catch (err) {
+      setError("Failed to search for movies");
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
     setSearchQuery("");
   };
   console.log("hey");
@@ -48,16 +62,24 @@ const Home = () => {
           Go
         </button>
       </form>
+      {error && <div className="error-message">{error}</div>}
 
-      <h3 className="page_title">Home</h3>
-      <div className="movies-grid">
-        {movies.map(
-          (movie) =>
-            movie.title.toLowerCase().startsWith(searchQuery) && (
-              <MovieCard key={movie.id} movie={movie} />
+      {loading ? (
+        <div className="loading">loading...</div>
+      ) : (
+        <div className="movies-grid">
+          {movies ? (
+            movies.map(
+              (movie) =>
+                movie.title.toLowerCase().startsWith(searchQuery) && (
+                  <MovieCard key={movie.id} movie={movie} />
+                )
             )
-        )}
-      </div>
+          ) : (
+            <p>No movies found</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
