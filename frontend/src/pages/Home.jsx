@@ -1,20 +1,38 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import MovieCard from "../components/MovieCard";
 import "../styles/Home.css";
+import { getPopularMovies, searchMovies } from "../services/api";
 
 const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [movies, setMovies] = useState([]);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const movies = [
-    { id: 1, title: "Chorus", releaseDate: "2020" },
-    { id: 2, title: "Substance", releaseDate: "2020" },
-    { id: 3, title: "Qwiggly", releaseDate: "2020" },
-  ];
+  useEffect(() => {
+    const loadPopularMovies = async () => {
+      try {
+        const popularMovies = await getPopularMovies();
+        setMovies(popularMovies);
+      } catch (err) {
+        setError(err);
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadPopularMovies();
+  }, []);
+  searchMovies;
+  getPopularMovies;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     alert(searchQuery);
     setSearchQuery("");
   };
+  console.log("hey");
+  console.log(movies);
 
   return (
     <div className="home">
