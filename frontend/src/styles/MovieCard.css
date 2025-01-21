@@ -65,11 +65,11 @@
   transition: background-color 0.2s;
 }
 
-.favorite-btn:hover {
+.fave-btn:hover {
   background-color: rgba(0, 0, 0, 0.8);
 }
 
-.favorite-btn.active {
+.fave-btn.active {
   color: #ff4757;
 }
 
